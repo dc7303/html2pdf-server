@@ -1,9 +1,10 @@
 import os
+import logging
 
-from flask import Flask, request, send_file, jsonify
+from flask import Flask, request, send_file, jsonify, make_response
 import pdfkit
 
-ROOT_DIR = os.path.dirname(os.path.abspath(__file__)
+ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
 PDF_TEMP_DIR = ROOT_DIR + '/pdf_temp'
 
 app = Flask(__name__)
@@ -24,16 +25,20 @@ def create_pdf_path():
     return PDF_TEMP_DIR + '/' + str(idx) + '.pdf'
 
 
+@app.route('/')
+def index():
+    return 'Hello world!'
+
+
 @app.route('/wkhtmltopdf/bystr', methods=['POST'])
 def download_pdf():
     html_str = request.form['html_str']
-    pdf_name = create_pdf_path()
-    pdfkit.from_string(html_str, pdf_name)
+    pdf_path = create_pdf_path()
+    pdfkit.from_string(html_str, pdf_path)
     try:
-        raise Exception
-        return send_file(pdf_name, as_attachment=True)
+        return send_file(pdf_path, as_attachment=True)
     except:
-        return make_response(jsonify(error='server error', 500))
+        return make_response(jsonify(error='server error'), 500)
     finally:
         os.remove(pdf_path)
 
