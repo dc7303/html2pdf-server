@@ -5,7 +5,8 @@ from flask import Flask, request, send_file, jsonify, make_response
 import pdfkit
 
 ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
-PDF_TEMP_DIR = ROOT_DIR + '/pdf_temp'
+PDF_TEMP_DIR = '/tmp'
+KIT_CONFIG = pdfkit.configuration(wkhtmltopdf=bytes('/usr/local/bin/wkhtmltopdf', 'utf8'))
 
 app = Flask(__name__)
 
@@ -21,8 +22,8 @@ def create_pdf_path():
             idx += 1
         else:
             break
-    
-    return PDF_TEMP_DIR + '/' + str(idx) + '.pdf'
+
+    return PDF_TEMP_DIR + '/' + 'file_' + str(idx) + '.pdf'
 
 
 @app.route('/')
@@ -34,7 +35,17 @@ def index():
 def download_pdf():
     html_str = request.form['html_str']
     pdf_path = create_pdf_path()
-    pdfkit.from_string(html_str, pdf_path)
+    print(os.path.isfile(pdf_path), pdf_path)
+    pdfkit.from_string(
+        html_str,
+        pdf_path,
+        configuration=KIT_CONFIG,
+        options={
+            'encoding': 'UTF-8',
+            'page-size': 'A4',
+        }
+    )
+    print(os.path.isfile(pdf_path), pdf_path)
     try:
         return send_file(pdf_path, as_attachment=True)
     except:
