@@ -1,5 +1,6 @@
 import os
 import logging
+from datetime import datetime
 
 from flask import Flask, request, send_file, jsonify, make_response
 import pdfkit
@@ -18,12 +19,13 @@ def has_pdf(file_name):
 def create_pdf_path():
     idx = 0
     while True:
+        now = datetime.now().strftime('%Y%m%d%H%M%S')
         if has_pdf(str(idx) + '.pdf'):
             idx += 1
         else:
             break
 
-    return PDF_TEMP_DIR + '/' + 'file_' + str(idx) + '.pdf'
+    return PDF_TEMP_DIR + '/' + 'file_' + now + '_' + str(idx) + '.pdf'
 
 
 @app.route('/')
