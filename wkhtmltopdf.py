@@ -37,7 +37,6 @@ def index():
 def download_pdf():
     html_str = request.form['html_str']
     pdf_path = create_pdf_path()
-    print(os.path.isfile(pdf_path), pdf_path)
     pdfkit.from_string(
         html_str,
         pdf_path,
@@ -47,7 +46,6 @@ def download_pdf():
             'page-size': 'A4',
         }
     )
-    print(os.path.isfile(pdf_path), pdf_path)
     try:
         return send_file(pdf_path, as_attachment=True)
     except:
