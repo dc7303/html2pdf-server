@@ -6,7 +6,7 @@ Use wkhtmltopdf 0.12.5.
 ### Usage
 See docker hub [dc7303/wkhtmltopdf-api](https://hub.docker.com/repository/docker/dc7303/wkhtmltopdf-api/general)
 
-### dvelop
+### Development
 **[wkhtmltopdf](https://wkhtmltopdf.org/) must be installed before using.**
 
 ```bash
